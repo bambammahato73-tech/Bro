@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>Payment QR</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#000508;
+  --panel:rgba(5,12,20,.96);
+  --g:#00ff88;
+  --b:#00ccff;
+  --y:#ffd700;
+  --txt:#c0e0ff;
+  --mono:'Share Tech Mono', monospace;
+  --head:'Orbitron', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(900px 500px at 50% 0%, rgba(0,204,255,.15), transparent 60%),
+    radial-gradient(700px 400px at 20% 30%, rgba(0,255,136,.12), transparent 55%),
+    var(--bg);
+  color:var(--txt);
+  font-family:Rajdhani;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+}
+.card{
+  width:min(520px,100%);
+  background:var(--panel);
+  border:1px solid rgba(0,204,255,.3);
+  border-radius:18px;
+  box-shadow:0 22px 70px rgba(0,0,0,.65);
+}
+.header{
+  padding:16px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  text-align:center;
+}
+.header h1{
+  font-family:var(--head);
+  background:linear-gradient(90deg,var(--g),var(--b));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.header p{
+  font-family:var(--mono);
+  font-size:11px;
+  color:#aaa;
+}
+.content{padding:16px}
+.qr-wrap{
+  background:#fff;
+  border:2px solid var(--b);
+  border-radius:16px;
+  padding:12px;
+}
+.qr-box{
+  aspect-ratio:1/1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.qr-box img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+label{
+  margin-top:18px;
+  display:block;
+  font-family:var(--mono);
+  color:var(--b);
+}
+input{
+  width:100%;
+  margin-top:8px;
+  padding:14px;
+  background:#000;
+  color:#fff;
+  border-radius:12px;
+  border:1px solid var(--b);
+  outline:none;
+}
+button{
+  width:100%;
+  margin-top:18px;
+  padding:15px;
+  border-radius:16px;
+  border:1px solid var(--g);
+  background:rgba(0,255,136,.12);
+  color:var(--g);
+  font-family:var(--head);
+  cursor:pointer;
+}
+button:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
+.status{
+  margin-top:16px;
+  padding:14px;
+  border-radius:14px;
+  border:1px dashed var(--y);
+  color:var(--y);
+  text-align:center;
+  font-family:var(--mono);
+  font-size:12px;
+}
+.support{
+  margin-top:12px;
+  text-align:center;
+}
+.support a{
+  color:var(--b);
+  font-family:var(--mono);
+  font-size:12px;
+  text-decoration:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <div class="header">
+    <h1>PAYMENT PORTAL</h1>
+    <p>Scan QR • Pay • Submit UTR</p>
+  </div>
+
+  <div class="content">
+
+    <div class="qr-wrap">
+      <div class="qr-box">
+        <!-- ✅ UPDATED QR GIF URL -->
+        <img id="qrImg" src="https://img.sanishtech.com/u/5008e2b6e4dbd4c9e1c4e8b518638da0.gif" alt="Payment QR">
+      </div>
+    </div>
+
+    <label>UTR / Transaction ID</label>
+    <input id="utr" placeholder="Enter 12-digit UTR" maxlength="12" inputmode="numeric">
+
+    <button id="submitBtn" onclick="submitUTR()">SUBMIT UTR</button>
+
+    <div class="status" id="statusBox">
+      SYSTEM STATUS: AWAITING TRANSACTION
+    </div>
+
+    <div class="support">
+      <a href="https://t.me/Dmmm_mi" target="_blank" rel="noopener">📞 Customer Support</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function submitUTR(){
+  const utr = document.getElementById("utr").value.trim();
+
+  if(utr.length < 10){
+    alert("Please enter valid UTR (10-12 digits)");
+    return;
+  }
+
+  // save payment flag
+  localStorage.setItem("payment_status","done");
+  localStorage.setItem("utr_value", utr);
+
+  // disable button to avoid double click
+  document.getElementById("submitBtn").disabled = true;
+
+  let timeLeft = 5;
+  const statusBox = document.getElementById("statusBox");
+
+  statusBox.innerHTML =
+    "PAYMENT SUBMITTED ✅<br>REDIRECTING IN <b>" + timeLeft + "</b> SECONDS";
+
+  const timer = setInterval(()=>{
+    timeLeft--;
+
+    statusBox.innerHTML =
+      "PAYMENT SUBMITTED ✅<br>REDIRECTING IN <b>" + timeLeft + "</b> SECONDS";
+
+    if(timeLeft <= 0){
+      clearInterval(timer);
+      window.location.href = "prediction.html";
+    }
+  },1000);
+}
+</script>
+
+</body>
+</html>
